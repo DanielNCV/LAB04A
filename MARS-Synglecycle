@@ -18,59 +18,71 @@ la $a0,endl
 li $v0,4
 syscall
 
-#   igual o diferente
-slt $s1, $s2, $s3
-slt $s4, $s3, $s2
-beq $s1, $s4 , c1
-la $a0,dif
-li $v0,4
-syscall
-la $a0,endl
-li $v0,4
-syscall
+#  menor o mayor igual --------
 
-slt $s5, $s4, $s1 
-bne $s5, $zero , m2 #si es menor 
-j m1 #si es mayor
-
-c1:   la $a0,igual
-      li $v0,4
-      syscall
-      li $v0,10
-      syscall
-
-#  mayor o menor igual
-
-m1: slt $s1, $s3, $s2
-    bne $s1, $zero, c2
-    la $a0,mayor
-    li $v0,4
-    syscall
-    la $a0,endl
-    li $v0,4
-    syscall
-    beq $s1, $s4 , c3
-c2:  la $a0,MenIgu
-      li $v0,4
-      syscall
-      li $v0,10
-      syscall
-      
-# menor o mayor igual 
-m2: slt $s1, $s2, $s3
-    bne $s1, $zero, c3
+m1: slt $s1, $s2, $s3 #  s1=1 menor ; s1 = 0 mayor o igual
+    beq $s1, $zero, c1 # va a c2 si s1=0, si es mayor o igual
+    addi $a0, $s2, 0
+    li $v0, 1
+    syscall 
     la $a0,menor
     li $v0,4
     syscall
     la $a0,endl
     li $v0,4
     syscall
-    beq $s1, $s4 , c2
-c3:  la $a0,MayIgu
+    li $v0,10
+    syscall
+c1:     addi $a0, $s2, 0  # solo vendra si es mayor igual
+	li $v0,1
+	syscall
+	la $a0,MayIgu
+	li $v0,4
+        syscall
+        li $v0,10
+        syscall
+     
+ #  mayor o menor igual --------
+m2: slt $s1, $s3, $s2 # s1 = 1, es mayor, s1=0 es menor o igual 
+    beq $s1, $zero, c2
+    addi $a0, $s2, 0  # solo vendra si es menor igual
+    li $v0,1
+    syscall
+    la $a0,mayor
+    li $v0,4
+    syscall
+    la $a0,endl
+    li $v0,4
+    syscall
+    li $v0,10
+    syscall
+c2:      addi $a0, $s2, 0  # solo vendra si es menor igual
+	 li $v0,1
+	 syscall
+	 la $a0,MenIgu
+         li $v0,4
+         syscall
+         li $v0,10
+         syscall
+         
+#  igual o diferente --------
+slt $t0, $s2, $s3
+bne $t0, $zero, d #s1 =1, salta   
+slt $t1, $s3, $s2
+bne $t1, $zero, d
+la $a0,igual
+li $v0,4
+syscall
+li $v0,10
+syscall
+
+d:    la $a0,dif
       li $v0,4
       syscall
       li $v0,10
       syscall
+
+
 .data
 igual: .asciiz "Iguales "
 dif: .asciiz "Diferentes "
